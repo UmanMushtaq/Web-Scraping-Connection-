@@ -1,0 +1,27 @@
+
+from selenium import webdriver
+from bs4 import BeautifulSoup
+import time
+
+options = webdriver.ChromeOptions()
+options.add_argument('--ignore-certificate-errors')
+options.add_argument('--incognito')
+options.add_argument('--headless')
+driver = webdriver.Chrome(r"C:\Users\User\Downloads\Compressed\chromedriver", chrome_options=options)
+
+
+driver.get("URLofWebsite")
+more_buttons = driver.find_elements_by_class_name("moreLink")
+for x in range(len(more_buttons)):
+  if more_buttons[x].is_displayed():
+      driver.execute_script("arguments[0].click();", more_buttons[x])
+      time.sleep(1)
+page_source = driver.page_source
+soup = BeautifulSoup(page_source, 'lxml')
+products = []
+products_selector = soup.findAll("div", {"class": "nxt_image_wrapper"})
+with open('humanhairwigs.txt', 'w') as filehandle:
+    for div in products_selector:
+        filehandle.write('%s\n' % div.find('a')['href'])
+    
+
